@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat:*)",
+      "WebSearch",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Read(//private/tmp/**)",
+      "Bash(rm -rf imk_sample)",
+      "Bash(gh repo *)",
+      "Bash(swift build *)",
+      "Bash(grep -vE '^\\\\s*$')",
+      "Bash(.build/debug/lexicon-builder --output Resources/lexicon.db --layouts Targets/BanglaIMEExtension/Resources/layouts -v)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

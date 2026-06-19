@@ -1,0 +1,54 @@
+{
+  "name": "Bangla (Borno-style Phonetic)",
+  "id": "borno",
+  "type": "phonetic",
+  "vowels": {
+    "a": "া", "A": "া", "i": "ি", "I": "ী", "u": "ু", "U": "ূ",
+    "e": "ে", "E": "ে", "oi": "ৈ", "o": "ো", "O": "ো", "ou": "ৌ"
+  },
+  "independentVowels": {
+    "a": "আ", "A": "আ", "i": "ই", "I": "ঈ", "u": "উ", "U": "ঊ",
+    "e": "এ", "E": "এ", "oi": "ঐ", "o": "ও", "O": "ও", "ou": "ঔ"
+  },
+  "consonantEnding": {},
+  "specials": {
+    "..": "।", "...": "॥",
+    "0": "০", "1": "১", "2": "২", "3": "৩", "4": "৪",
+    "5": "৫", "6": "৬", "7": "৭", "8": "৮", "9": "৯"
+  },
+  "rules": [
+    { "match": "k",   "output": "ক"  },
+    { "match": "kh",  "output": "খ"  },
+    { "match": "g",   "output": "গ"  },
+    { "match": "gh",  "output": "ঘ"  },
+    { "match": "ng",  "output": "ং"  },
+    { "match": "c",   "output": "চ"  },
+    { "match": "ch",  "output": "ছ"  },
+    { "match": "j",   "output": "জ"  },
+    { "match": "jh",  "output": "ঝ"  },
+    { "match": "T",   "output": "ট"  },
+    { "match": "Th",  "output": "ঠ"  },
+    { "match": "D",   "output": "ড"  },
+    { "match": "Dh",  "output": "ঢ"  },
+    { "match": "N",   "output": "ণ"  },
+    { "match": "t",   "output": "ত"  },
+    { "match": "th",  "output": "থ"  },
+    { "match": "d",   "output": "দ"  },
+    { "match": "dh",  "output": "ধ"  },
+    { "match": "n",   "output": "ন"  },
+    { "match": "p",   "output": "প"  },
+    { "match": "ph",  "output": "ফ"  },
+    { "match": "f",   "output": "ফ"  },
+    { "match": "b",   "output": "ব"  },
+    { "match": "bh",  "output": "ভ"  },
+    { "match": "v",   "output": "ভ"  },
+    { "match": "m",   "output": "ম"  },
+    { "match": "y",   "output": "য"  },
+    { "match": "r",   "output": "র"  },
+    { "match": "l",   "output": "ল"  },
+    { "match": "sh",  "output": "শ"  },
+    { "match": "Sh",  "output": "ষ"  },
+    { "match": "s",   "output": "স"  },
+    { "match": "h",   "output": "হ"  }
+  ]
+}
