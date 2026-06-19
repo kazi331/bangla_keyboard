@@ -53,7 +53,7 @@ public enum Schema {
         """
         CREATE TABLE IF NOT EXISTS user_word (
             id            INTEGER PRIMARY KEY AUTOINCREMENT,
-            bangla        TEXT NOT NULL,
+            bangla        TEXT NOT NULL UNIQUE,
             latin_hint    TEXT,
             custom_freq   REAL NOT NULL DEFAULT 0.5,
             created_at    INTEGER NOT NULL,

@@ -53,7 +53,8 @@ let package = Package(
         .executableTarget(
             name: "BanglaSettings",
             dependencies: ["BanglaEngine", "BanglaStorage", "BanglaXPC"],
-            path: "Targets/BanglaSettings"
+            path: "Targets/BanglaSettings",
+            exclude: ["Info.plist", "Entitlements"]
         ),
         .executableTarget(
             name: "LexiconBuilder",

@@ -54,8 +54,8 @@ final class AppSettingsModel: ObservableObject {
     func refreshStats() {
         guard let pool else { return }
         let conn = try? pool.connection()
-        userWordCount = (try? conn?.query("SELECT COUNT(*) FROM user_word;", map: { $0.int(0) }).first) ?? 0 ?? 0
-        commitCount = (try? conn?.query("SELECT COUNT(*) FROM commit_log;", map: { $0.int(0) }).first) ?? 0 ?? 0
+        userWordCount = (try? conn?.query("SELECT COUNT(*) FROM user_word;", map: { $0.int(0) }).first) ?? 0
+        commitCount = (try? conn?.query("SELECT COUNT(*) FROM commit_log;", map: { $0.int(0) }).first) ?? 0
     }
 
     func burnHistory() {
@@ -88,7 +88,7 @@ final class AppSettingsModel: ObservableObject {
     func exportDictionary(to url: URL) {
         guard let pool else { return }
         let conn = try? pool.connection()
-        let rows = (try? conn?.query("SELECT COALESCE(latin_hint,''), bangla FROM user_word ORDER BY bangla;", map: { "\($0.text(0))\t\($0.text(1))" })) ?? [] ?? []
+        let rows = (try? conn?.query("SELECT COALESCE(latin_hint,''), bangla FROM user_word ORDER BY bangla;", map: { "\($0.text(0))\t\($0.text(1))" })) ?? []
         let text = (rows).joined(separator: "\n") + "\n"
         try? text.write(to: url, atomically: true, encoding: .utf8)
         status = "Exported \(rows.count) entries."

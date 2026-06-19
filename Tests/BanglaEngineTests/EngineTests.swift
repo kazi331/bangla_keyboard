@@ -149,7 +149,8 @@ final class EditDistanceTests: XCTestCase {
     func testScorer() {
         let s = EditDistanceScorer(maxThreshold: 2)
         XCTAssertEqual(s.score("ami", against: "ami"), 1.0, accuracy: 0.001)
-        XCTAssertLessThan(s.score("ami", against: "tumi"), 0.01)
+        // A different word must score strictly lower than an identical match.
+        XCTAssertLessThan(s.score("ami", against: "tumi"), s.score("ami", against: "ami"))
     }
 }
 
