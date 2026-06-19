@@ -254,19 +254,19 @@ final class BanglaInputController: IMKInputController {
 
     private func recordCommit(chosen: String, source: String) {
         let latin = session.buffer.latin
-        Task { [bootstrap, weak self] in
-            guard self != nil else { return }
+        let appBundle = Bundle.main.bundleIdentifier
+        Task { [bootstrap] in
             await bootstrap.engine.observeCommit(
                 latin: latin,
                 chosen: Candidate(bangla: chosen, latinHint: latin, source: .lexicon),
                 context: [],
                 sessionId: UUID(),
-                appBundleHash: Bundle.main.bundleIdentifier
+                appBundleHash: appBundle
             )
         }
     }
 
     override func commitComposition(_ sender: Any!) {
-        commitComposed(client: sender as? IMKTextInput)
+        _ = commitComposed(client: sender as? IMKTextInput)
     }
 }

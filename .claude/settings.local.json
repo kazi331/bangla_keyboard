@@ -10,7 +10,8 @@
       "Bash(swift build *)",
       "Bash(grep -vE '^\\\\s*$')",
       "Bash(.build/debug/lexicon-builder --output Resources/lexicon.db --layouts Targets/BanglaIMEExtension/Resources/layouts -v)",
-      "Bash(grep -vE '^\\\\s*warning:|note:|`-')"
+      "Bash(grep -vE '^\\\\s*warning:|note:|`-')",
+      "Bash(swift test *)"
     ],
     "deny": [],
     "ask": [],

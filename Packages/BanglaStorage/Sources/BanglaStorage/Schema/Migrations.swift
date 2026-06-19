@@ -120,21 +120,25 @@ public enum Migration {
         let conn = try pool.connection()
         try conn.exec("BEGIN;")
         do {
-            // Bootstrap schema_version if missing.
-            try conn.exec(Schema.userDDL[0])
+            // Apply all base DDL first. Every statement is idempotent
+            // (IF NOT EXISTS / external-content FTS references the already-created
+            // base tables), so re-running migrate() on an existing DB is a no-op.
+            for ddl in Schema.userDDL {
+                try conn.exec(ddl)
+            }
             let current: Int = try conn.query(
                 "SELECT COALESCE(MAX(version), 0) AS v FROM schema_version;", params: []
             ) { row in row.int(0) }.first ?? 0
 
             if current < 1 {
-                // DDL already created the tables via IF NOT EXISTS; record version.
                 try conn.run(
                     "INSERT OR REPLACE INTO schema_version (version, applied_at) VALUES (?, ?);",
                     params: [.int(1), .int(Int(Date().timeIntervalSince1970))]
                 )
             }
             if current < 2 {
-                // v2: add user_word_fts triggers for content-sync (FTS5 external content).
+                // v2: add user_word_fts triggers for content-sync (FTS5 external
+                // content). user_word and user_word_fts already exist from the DDL.
                 try conn.exec("""
                 CREATE TRIGGER IF NOT EXISTS user_word_ai AFTER INSERT ON user_word BEGIN
                     INSERT INTO user_word_fts(rowid, bangla, latin_hint)
