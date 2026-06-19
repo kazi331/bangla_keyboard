@@ -15,15 +15,27 @@ import BanglaCandidateUI
 final class BanglaInputController: IMKInputController {
 
     private let bootstrap = IMEBootstrap.shared
-    private var session: CompositionSession
+    // Default-initialized so any init path leaves `session` valid; the designated
+    // IMK initializer below sets it to the live layout, and `activateServer`
+    // refreshes it on activation.
+    private var session: CompositionSession = CompositionSession(layoutId: IMEBootstrap.shared.activeLayoutId)
     private let panel = CandidatePanel()
     private var candidates: [Candidate] = []
     private var selectedCandidateIndex = 0
 
-    override init() {
+    /// IMK creates one controller per input client via this designated
+    /// initializer (the ObjC `initWithServer:delegate:client:`), *not* the
+    /// parameterless `init()`. We must override it so the subclass's stored
+    /// `session` is assigned before `super.init` — the inherited ObjC
+    /// initializer never touches it, which previously left `session`
+    /// uninitialized and trapped (EXC_BREAKPOINT / SIGTRAP) on every
+    /// activation. Repeated crashes caused macOS to pull the input method off
+    /// the menu bar, and since the controller died before handling keys, raw
+    /// English keystrokes passed straight through.
+    override init!(server: IMKServer!, delegate: Any!, client: Any!) {
         let layoutId = IMEBootstrap.shared.activeLayoutId
         self.session = CompositionSession(layoutId: layoutId)
-        super.init()
+        super.init(server: server, delegate: delegate, client: client)
     }
 
     override func activateServer(_ sender: Any!) {

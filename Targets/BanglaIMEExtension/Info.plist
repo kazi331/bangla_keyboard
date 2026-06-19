@@ -36,6 +36,8 @@
     <array>
         <string>Beng</string>
     </array>
+    <key>TISIntendedLanguage</key>
+    <string>bn</string>
     <key>tsInputMethodIconFileKey</key>
     <string>main.tiff</string>
 </dict>
