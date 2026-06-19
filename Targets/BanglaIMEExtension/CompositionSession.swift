@@ -2,7 +2,11 @@ import Foundation
 import BanglaEngine
 
 /// Per-text-field composition state. Owned by the controller.
-@MainActor
+///
+/// Not `@MainActor`: IMK invokes the controller's overrides on the main thread
+/// by contract, so the session is single-threaded in practice without needing
+/// compile-time actor isolation (which would conflict with IMK's non-isolated
+/// Objective-C base-class methods).
 public final class CompositionSession {
     public let id: UUID
     public var state: CompositionState

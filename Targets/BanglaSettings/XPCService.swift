@@ -9,7 +9,7 @@ final class BanglaXPCService: NSObject, BanglaXPProtocol {
     private let startupError: String?
 
     /// Non-throwing so it can be used as `exportedObject`; captures any failure.
-    init() {
+    override init() {
         var pool: ConnectionPool? = nil
         var err: String? = nil
         do {

@@ -9,9 +9,11 @@
       "Bash(gh repo *)",
       "Bash(swift build *)",
       "Bash(grep -vE '^\\\\s*$')",
-      "Bash(.build/debug/lexicon-builder --output Resources/lexicon.db --layouts Targets/BanglaIMEExtension/Resources/layouts -v)"
+      "Bash(.build/debug/lexicon-builder --output Resources/lexicon.db --layouts Targets/BanglaIMEExtension/Resources/layouts -v)",
+      "Bash(grep -vE '^\\\\s*warning:|note:|`-')"
     ],
     "deny": [],
-    "ask": []
+    "ask": [],
+    "defaultMode": "bypassPermissions"
   }
 }

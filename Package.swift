@@ -1,4 +1,10 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 5.9
+// NB: tools-version < 6.0 defaults the Swift language mode to v5. The host
+// target subclasses IMKInputController, whose Objective-C headers are not
+// @MainActor-annotated; strict Swift 6 concurrency makes that subclassing
+// impractical, so the whole package is built in Swift 5 mode. The engine and
+// storage still use actors + Sendable types; they just are not strictly
+// checked at compile time.
 import PackageDescription
 
 let package = Package(
@@ -37,10 +43,12 @@ let package = Package(
             name: "BanglaIMEExtension",
             dependencies: ["BanglaEngine", "BanglaStorage", "BanglaXPC", "BanglaCandidateUI"],
             path: "Targets/BanglaIMEExtension",
+            exclude: ["Info.plist", "Entitlements"],
             resources: [
                 .copy("Resources/layouts"),
                 .copy("Resources/lexicon.db"),
-            ]
+            ],
+            linkerSettings: [.linkedFramework("InputMethodKit"), .linkedFramework("AppKit")]
         ),
         .executableTarget(
             name: "BanglaSettings",

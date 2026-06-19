@@ -5,7 +5,7 @@ public struct Candidate: Hashable, Sendable, Identifiable {
     public let id: String        // bangla text acts as identity
     public let bangla: String
     public let latinHint: String
-    public let source: CandidateSource
+    public var source: CandidateSource
     public var score: Double
     public var useCount: Int
     public var lastUsedAt: Date

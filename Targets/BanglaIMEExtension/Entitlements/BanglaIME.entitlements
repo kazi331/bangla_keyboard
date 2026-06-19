@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Ad-hoc / local install: run unsandboxed so the bundled lexicon and the
+         per-user user.db in ~/Library/Application Support are reachable without
+         a Developer ID + App Group provisioning profile.
+         PRODUCTION: switch to a sandboxed entitlement set with
+           com.apple.security.app-sandbox = true
+           com.apple.security.application-groups = [ "<your group id>" ]
+           com.apple.security.temporary-exception.mach-register.global-name =
+               "$(PRODUCT_BUNDLE_IDENTIFIER)_Connection"
+         and notarize with a Developer ID. See docs/INSTALL.md. -->
+    <key>com.apple.security.app-sandbox</key>
+    <false/>
+    <key>com.apple.security.network.client</key>
+    <false/>
+    <key>com.apple.security.files.user-selected.read-write</key>
+    <true/>
+</dict>
+</plist>

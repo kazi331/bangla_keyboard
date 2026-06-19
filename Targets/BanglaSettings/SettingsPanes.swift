@@ -1,4 +1,6 @@
 import SwiftUI
+import AppKit
+import UniformTypeIdentifiers
 import BanglaXPC
 
 struct SettingsRoot: View {
@@ -62,7 +64,6 @@ private struct LayoutsPane: View {
 private struct DictionaryPane: View {
     @ObservedObject var model: AppSettingsModel
     @State private var showImport = false
-    @State private var showExport = false
     var body: some View {
         Form {
             Section("User dictionary") {
@@ -71,7 +72,7 @@ private struct DictionaryPane: View {
             }
             Section("Import / Export") {
                 Button("Import .tsv…") { showImport = true }
-                Button("Export .tsv…") { showExport = true }
+                Button("Export .tsv…") { exportTSV() }
             }
             Section("Maintenance") {
                 Button("Vacuum database") { model.vacuum() }
@@ -85,9 +86,15 @@ private struct DictionaryPane: View {
         .fileImporter(isPresented: $showImport, allowedContentTypes: [.tabSeparatedText]) { result in
             if case .success(let url) = result { model.importDictionary(from: url) }
         }
-        .fileExporter(isPresented: $showExport, document: TSVDocument(), contentType: .tabSeparatedText, defaultFilename: "bangla-user-dict.tsv") { result in
-            if case .success(let url) = result { model.exportDictionary(to: url) }
-        }
+    }
+
+    private func exportTSV() {
+        let panel = NSSavePanel()
+        panel.title = "Export user dictionary"
+        panel.nameFieldStringValue = "bangla-user-dict.tsv"
+        panel.allowedContentTypes = [.tabSeparatedText]
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+        model.exportDictionary(to: url)
     }
 }
 
@@ -127,12 +134,4 @@ private struct AboutPane: View {
         }
         .padding()
     }
-}
-
-/// Lightweight wrapper so SwiftUI's fileExporter can present a TSV download.
-struct TSVDocument: FileDocument {
-    static var readableContentTypes: [UTType] { [.tabSeparatedText] }
-    init() {}
-    init(configuration: ReadConfiguration) throws {}
-    func fileWrapper(for contentType: UTType) throws -> FileWrapper { FileWrapper(regularFileWithContents: Data()) }
 }

@@ -45,7 +45,7 @@ let usage = """
 lexicon-builder --output <path> --layouts <dir> [--wordlist <file>] [-v]
 """
 
-@MainActor func log(_ s: String) { if opts.verbose { FileHandle.standardError.write((s + "\n").data(using: .utf8)!) } }
+func log(_ s: String) { if opts.verbose { FileHandle.standardError.write((s + "\n").data(using: .utf8)!) } }
 
 // 1. Resolve output path.
 let outputURL = URL(fileURLWithPath: opts.output)
@@ -90,7 +90,7 @@ log("Inserted \(phonemeCount) phoneme_map rows")
 
 // 4. Seed dictionary -> word tables.
 var wordCount = 0
-@MainActor func insertWord(latin: String, bangla: String, freq: Double, source: String) {
+func insertWord(latin: String, bangla: String, freq: Double, source: String) {
     guard !latin.isEmpty, !bangla.isEmpty else { return }
     do {
         try lexiconRepo.insertWord(bangla: bangla, baseFreq: freq, isProper: false, source: source, latinHints: [latin])

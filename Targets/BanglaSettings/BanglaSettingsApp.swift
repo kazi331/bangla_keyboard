@@ -28,24 +28,25 @@ struct BanglaSettingsApp: App {
 }
 
 /// Sets up the embedded XPC listener on launch.
-final class SettingsAppDelegate: NSObject, NSApplicationDelegate {
+final class SettingsAppDelegate: NSObject, NSApplicationDelegate, NSXPCListenerDelegate {
     private var listener: NSXPCListener?
     private var service: BanglaXPCService?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        do {
-            let svc = try BanglaXPCService()
-            let listener = NSXPCListener(machServiceName: BanglaXPCConstants.serviceLabel)
-            let iface = NSXPCInterface(with: BanglaXPProtocol.self)
-            listener.setInterface(iface, forExportedInterface: svc)
-            listener.exportedInterface = iface
-            listener.exportedObject = svc
-            listener.resume()
-            self.listener = listener
-            self.service = svc
-            NSLog("BanglaIME XPC listener armed: \(BanglaXPCConstants.serviceLabel)")
-        } catch {
-            NSLog("BanglaIME XPC listener failed to start: \(error)")
-        }
+        let svc = BanglaXPCService()
+        let listener = NSXPCListener(machServiceName: BanglaXPCConstants.serviceLabel)
+        listener.delegate = self
+        listener.resume()
+        self.listener = listener
+        self.service = svc
+        NSLog("BanglaIME XPC listener armed: \(BanglaXPCConstants.serviceLabel) (available=\(svc.available))")
+    }
+
+    func listener(_ listener: NSXPCListener, shouldAcceptNewConnection connection: NSXPCConnection) -> Bool {
+        guard let svc = service else { return false }
+        connection.exportedInterface = NSXPCInterface(with: BanglaXPProtocol.self)
+        connection.exportedObject = svc
+        connection.resume()
+        return true
     }
 }
