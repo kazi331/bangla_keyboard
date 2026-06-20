@@ -11,9 +11,11 @@
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>BanglaIME</string>
+    <string>__BUNDLE_NAME__</string>
     <key>CFBundleDisplayName</key>
-    <string>BanglaIME</string>
+    <string>__DISPLAY_NAME__</string>
+    <key>BanglaLayoutID</key>
+    <string>__LAYOUT_ID__</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
@@ -38,7 +40,5 @@
     </array>
     <key>TISIntendedLanguage</key>
     <string>bn</string>
-    <key>tsInputMethodIconFileKey</key>
-    <string>main.tiff</string>
 </dict>
 </plist>

@@ -9,7 +9,6 @@ struct SettingsRoot: View {
     var body: some View {
         TabView {
             GeneralPane(model: model).tabItem { Label("General", systemImage: "gearshape") }
-            LayoutsPane(model: model).tabItem { Label("Layouts", systemImage: "keyboard") }
             DictionaryPane(model: model).tabItem { Label("Dictionary", systemImage: "text.book.closed") }
             LearningPane(model: model).tabItem { Label("Learning", systemImage: "brain.head.profile") }
             AboutPane(model: model).tabItem { Label("About", systemImage: "info.circle") }
@@ -22,40 +21,20 @@ private struct GeneralPane: View {
     @ObservedObject var model: AppSettingsModel
     var body: some View {
         Form {
-            Picker("Active layout", selection: $model.activeLayout) {
-                ForEach(model.layouts, id: \.id) { l in Text(l.name).tag(l.id) }
+            Section("Input") {
+                Text("Layouts are now managed by macOS. Add or switch between Bangla layouts in")
+                + Text(" System Settings ▸ Keyboard ▸ Input Sources.").fontWeight(.semibold)
+                Text("Each layout (Avro Phonetic, Borno, Probhat, Munir Optical, National Jatiya) installs as its own input source.")
+                    .font(.caption).foregroundStyle(.secondary)
             }
-            Stepper("Candidates per panel: \(model.candidateCount)", value: $model.candidateCount, in: 3...9)
-            Toggle("Auto-capitalize sentences", isOn: $model.autoCapitalize)
-            Toggle("Show Latin hints", isOn: $model.showLatinHints)
-            Toggle("Allow usage telemetry", isOn: $model.telemetryOptIn)
-        }
-        .padding()
-    }
-}
-
-private struct LayoutsPane: View {
-    @ObservedObject var model: AppSettingsModel
-    var body: some View {
-        VStack(alignment: .leading) {
-            Text("Installed layouts")
-                .font(.headline)
-                .padding(.bottom, 4)
-            List(model.layouts, id: \.id) { l in
-                HStack {
-                    Image(systemName: model.activeLayout == l.id ? "checkmark.circle.fill" : "circle")
-                        .foregroundStyle(.tint)
-                    Text(l.name)
-                    Spacer()
-                    if model.activeLayout == l.id { Text("Active").foregroundStyle(.secondary) }
-                }
-                .contentShape(Rectangle())
-                .onTapGesture { model.activeLayout = l.id }
+            Section("Candidates & display") {
+                Stepper("Candidates per panel: \(model.candidateCount)", value: $model.candidateCount, in: 3...9)
+                Toggle("Auto-capitalize sentences", isOn: $model.autoCapitalize)
+                Toggle("Show Latin hints", isOn: $model.showLatinHints)
             }
-            Text("Fixed layouts map each key to a single glyph; phonetic layouts resolve typed Latin to Bangla.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .padding(.top, 4)
+            Section("Privacy") {
+                Toggle("Allow usage telemetry", isOn: $model.telemetryOptIn)
+            }
         }
         .padding()
     }

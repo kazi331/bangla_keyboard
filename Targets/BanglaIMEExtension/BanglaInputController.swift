@@ -58,8 +58,14 @@ final class BanglaInputController: IMKInputController {
 
         if event.type != .keyDown { return false }
 
-        let keyCode = event.keyCode
+        // Let the host application keep its keyboard shortcuts (Cmd/Ctrl/Opt
+        // combos). Only bare or Shift-modified keystrokes feed the IME.
         let modifiers = event.modifierFlags
+        if modifiers.contains(.command) || modifiers.contains(.control) || modifiers.contains(.option) {
+            return false
+        }
+
+        let keyCode = event.keyCode
 
         // Candidate navigation when the panel is showing.
         if !candidates.isEmpty {
@@ -85,6 +91,7 @@ final class BanglaInputController: IMKInputController {
             }
         }
 
+        // Special keys that drive the composition state machine.
         switch keyCode {
         case 51:  // backspace
             return doBackspace(client: client)
@@ -98,13 +105,23 @@ final class BanglaInputController: IMKInputController {
             break
         }
 
+        // Printable text (approach 3): the system forwards every keyDown as an
+        // NSEvent. Because we implement `handle(_:client:)`, IMK never invokes
+        // `inputText(_:client:)` — the two delivery modes are mutually exclusive
+        // (see IMKInputController.h). So we must consume printable characters
+        // here; returning `false` would let the raw Latin keystroke fall through
+        // to the client, which is exactly why typed text came out as English.
+        if let chars = event.characters, !chars.isEmpty {
+            return feedText(chars, client: client)
+        }
         return false
     }
 
-    /// Handle printable text input.
-    override func inputText(_ string: String!, client sender: Any!) -> Bool {
-        guard let string = string, !string.isEmpty else { return false }
-        let client = sender as? IMKTextInput
+    // MARK: - Text dispatch
+
+    /// Route a printable string to the active layout. Shared by `handle(_:)`
+    /// (approach 3) and the legacy `inputText(_:client:)` entry point.
+    private func feedText(_ string: String, client: IMKTextInput?) -> Bool {
         let layoutId = session.lastLayoutId
         guard let layout = bootstrap.layout(for: layoutId) else { return false }
 
@@ -121,6 +138,14 @@ final class BanglaInputController: IMKInputController {
         guard allowed else { return false }
 
         return feedPhonetic(string, client: client)
+    }
+
+    /// Legacy approach-1 entry point. IMK only calls this when the controller
+    /// does NOT implement `handle(_:client:)`; since we do, dispatch happens in
+    /// `handle(_:)`. Kept as a defensive fallback that shares `feedText`.
+    override func inputText(_ string: String!, client sender: Any!) -> Bool {
+        guard let string = string, !string.isEmpty else { return false }
+        return feedText(string, client: sender as? IMKTextInput)
     }
 
     // MARK: - Fixed layouts

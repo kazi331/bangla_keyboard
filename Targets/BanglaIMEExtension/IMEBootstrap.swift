@@ -17,8 +17,15 @@ final class IMEBootstrap {
     let sessionRepo: SessionRepository?
     private var resolverCache: [String: PhoneticResolver] = [:]
 
+    /// Layout this IME bundle transliterates. Each shipped app bundle carries a
+    /// `BanglaLayoutID` in its Info.plist so it registers as its own input
+    /// source in System Settings > Keyboard > Input Sources. Falls back to the
+    /// shared-preference value (useful for ad-hoc/dev builds without the key).
     var activeLayoutId: String {
-        SharedDefaults.defaults.string(forKey: SharedDefaults.Key.activeLayout) ?? "avro-phonetic"
+        if let bid = Bundle.main.infoDictionary?["BanglaLayoutID"] as? String, !bid.isEmpty {
+            return bid
+        }
+        return SharedDefaults.defaults.string(forKey: SharedDefaults.Key.activeLayout) ?? "avro-phonetic"
     }
 
     private init() {
